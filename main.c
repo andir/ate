@@ -137,10 +137,8 @@ void accel_decrease_font_size(GtkAccelGroup *accel_group,
   decrease_font_size(terminal);
 }
 
-
-void accel_paste(GtkAccelGroup *accel_group,
-		GObject* acceleratable, guint keyval,
-		GdkModifierType modifier) {
+void accel_paste(GtkAccelGroup *accel_group, GObject *acceleratable,
+                 guint keyval, GdkModifierType modifier) {
   VteTerminal *terminal =
       g_object_get_data(G_OBJECT(acceleratable), "terminal");
   vte_terminal_paste_clipboard(terminal);
@@ -186,7 +184,8 @@ int main(int argc, char *argv[]) {
 
   /* Disable cursor blinking */
   if (!cursor_blink) {
-    vte_terminal_set_cursor_blink_mode(VTE_TERMINAL(terminal), VTE_CURSOR_BLINK_OFF);
+    vte_terminal_set_cursor_blink_mode(VTE_TERMINAL(terminal),
+                                       VTE_CURSOR_BLINK_OFF);
   }
 
   /* Connect some signals */
@@ -231,12 +230,12 @@ int main(int argc, char *argv[]) {
   );
 
   /* alt+shift+y | paste */
-  gtk_accel_group_connect(accelg, /* group */
-		  	  gdk_keyval_from_name("y"),
-			  GDK_MOD1_MASK | GDK_SHIFT_MASK, /* key & mask */
-			  GTK_ACCEL_LOCKED,		  /* flags */
-			  g_cclosure_new(G_CALLBACK(accel_paste),
-				  	 terminal, NULL) /* callback */
+  gtk_accel_group_connect(
+      accelg, /* group */
+      gdk_keyval_from_name("y"),
+      GDK_MOD1_MASK | GDK_SHIFT_MASK,                         /* key & mask */
+      GTK_ACCEL_LOCKED,                                       /* flags */
+      g_cclosure_new(G_CALLBACK(accel_paste), terminal, NULL) /* callback */
   );
 
   gtk_window_add_accel_group(GTK_WINDOW(window), accelg);
