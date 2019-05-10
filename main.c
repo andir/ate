@@ -214,6 +214,15 @@ int main(int argc, char *argv[]) {
                                          terminal, NULL) /* callback */
   );
 
+  /* ctrl+shift+(Up) | increment font size */
+  gtk_accel_group_connect(accelg, /* group */
+                          gdk_keyval_from_name("Up"),
+                          GDK_CONTROL_MASK | GDK_SHIFT_MASK, /* key & mask */
+                          GTK_ACCEL_LOCKED,                  /* flags */
+                          g_cclosure_new(G_CALLBACK(accel_increase_font_size),
+                                         terminal, NULL) /* callback */
+  );
+
   /* ctrl+shift+(minus) | decrement font size */
   gtk_accel_group_connect(accelg, /* group */
                           gdk_keyval_from_name("minus"),
@@ -224,6 +233,15 @@ int main(int argc, char *argv[]) {
   );
   gtk_accel_group_connect(accelg, /* group */
                           gdk_keyval_from_name("underscore"),
+                          GDK_CONTROL_MASK | GDK_SHIFT_MASK, /* key & mask */
+                          GTK_ACCEL_LOCKED,                  /* flags */
+                          g_cclosure_new(G_CALLBACK(accel_decrease_font_size),
+                                         terminal, NULL) /* callback */
+  );
+
+  /* ctrl+shift+(Down) | decrement font size */
+  gtk_accel_group_connect(accelg, /* group */
+                          gdk_keyval_from_name("Down"),
                           GDK_CONTROL_MASK | GDK_SHIFT_MASK, /* key & mask */
                           GTK_ACCEL_LOCKED,                  /* flags */
                           g_cclosure_new(G_CALLBACK(accel_decrease_font_size),
