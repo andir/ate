@@ -10,8 +10,5 @@ stdenv.mkDerivation {
   installPhase = ''
     mkdir -p $out/bin
     cp ate $out/bin
-
-    # for compat
-    ln -s $out/bin/ate $out/bin/st
   '';
 }
