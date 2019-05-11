@@ -8,7 +8,7 @@ Goals:
   - Scrollback
   - Reflow
   - Emoji support
-  - Font resizing with ctrl-shift-minus/ctrl-shift-minus
+  - Font resizing with ctrl-shift-plus/ctrl-shift-minus
 
 Non-Goals:
    - Parsing configuration files
