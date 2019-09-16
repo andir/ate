@@ -1,13 +1,47 @@
 #include <gtk/gtk.h>
 #include <vte/vte.h>
+#include <linux/seccomp.h>
+#include <linux/filter.h>
+#include <linux/audit.h>
+//#include <linux/signal.h>
+#include <sys/ptrace.h>
+#include <sys/prctl.h>
 
-static const gchar *colors[] = {"#282a2e", "#a54242", "#8c9440", "#de935f",
-                                "#5f819d", "#85678f", "#5e8d87", "#707880",
-                                "#373b41", "#cc6666", "#b5bd68", "#f0c674",
-                                "#81a2be", "#b294bb", "#8abeb7", "#c5c8c6"};
 
-const char *background_color = "#1d1f21";
-const char *foreground_color = "#c5c8c6";
+// static const gchar *colors[] = {"#282a2e", "#a54242", "#8c9440", "#de935f",
+//                                 "#5f819d", "#85678f", "#5e8d87", "#707880",
+//                                 "#373b41", "#cc6666", "#b5bd68", "#f0c674",
+//                                 "#81a2be", "#b294bb", "#8abeb7", "#c5c8c6"};
+static const gchar *colors[] = {
+ /* 8 normal colors */
+  [0] = "#1c1b19", /* black   */
+  [1] = "#ef2f27", /* red     */
+  [2] = "#519f50", /* green   */
+  [3] = "#fbb829", /* yellow  */
+  [4] = "#2c78bf", /* blue    */
+  [5] = "#e02c6d", /* magenta */
+  [6] = "#0aaeb3", /* cyan    */
+  [7] = "#918175", /* white   */
+
+  /* 8 bright colors */
+  [8]  = "#2D2C29", /* black   */
+  [9]  = "#f75341", /* red     */
+  [10] = "#98bc37", /* green   */
+  [11] = "#fed06e", /* yellow  */
+  [12] = "#68A8E4", /* blue    */
+  [13] = "#ff5c8f", /* magenta */
+  [14] = "#53fde9", /* cyan    */
+  [15] = "#fce8c3", /* white   */
+};
+//   /* special colors */
+//   [256] = "#1c1b19", /* background */
+// [257] = "#fce8c3", /* foreground */
+
+const char *background_color = "#1c1b19";
+const char *foreground_color = "#fce8c3";
+
+// const char *background_color = "#1d1f21";
+// const char *foreground_color = "#c5c8c6";
 
 // static const keybinding* keybindings[] = {};
 const gboolean enable_hyperlinks = TRUE;
@@ -46,6 +80,33 @@ void spawn_cb(VteTerminal *terminal, GPid pid, GError *error,
   } else {
     fprintf(stderr, "Shell launched: %i\n", pid);
   }
+}
+
+// retrieve the entire text displayed in the current window
+void accel_get_text(GtkAccelGroup *accel_group,
+                              GObject *acceleratable, guint keyval,
+                              GdkModifierType modifier) {
+  VteTerminal *terminal = g_object_get_data(G_OBJECT(acceleratable), "terminal");
+
+  char *text = vte_terminal_get_text(terminal,
+		NULL,
+		NULL,
+		NULL);
+
+  printf("text: %s\n", text);
+
+  FILE *fd = popen(PIPECMD, "w");
+
+  if (fd == NULL) {
+  	free(text);
+	return;
+  }
+
+  fwrite(text, 1, strlen(text), fd);
+  fflush(fd);
+  fclose(fd);
+
+  free(text);
 }
 
 // whenever the terminal bell is triggered propagate the event to the window
@@ -143,7 +204,8 @@ void accel_paste(GtkAccelGroup *accel_group,
 		GdkModifierType modifier) {
   VteTerminal *terminal =
       g_object_get_data(G_OBJECT(acceleratable), "terminal");
-  vte_terminal_paste_clipboard(terminal);
+  fprintf(stderr, "paste\n");
+  vte_terminal_paste_primary(terminal);
 }
 
 int main(int argc, char *argv[]) {
@@ -152,6 +214,9 @@ int main(int argc, char *argv[]) {
   GdkRGBA *colors = NULL;
   GdkRGBA color;
   const size_t colors_count = get_color_pallete(&colors);
+
+
+
   if (colors_count <= 0 || colors == NULL) {
     return 1;
   }
@@ -165,6 +230,8 @@ int main(int argc, char *argv[]) {
 
   window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
   gtk_window_set_title(GTK_WINDOW(window), "at");
+
+  gtk_widget_set_opacity(GTK_WIDGET(window), 0.8);
 
   gdk_rgba_parse(&color, foreground_color);
   vte_terminal_set_color_foreground(VTE_TERMINAL(terminal), &color);
@@ -238,6 +305,18 @@ int main(int argc, char *argv[]) {
 			  g_cclosure_new(G_CALLBACK(accel_paste),
 				  	 terminal, NULL) /* callback */
   );
+
+  /* alt+shift+U | pipecmd */
+  gtk_accel_group_connect(accelg, /* group */
+		  	  gdk_keyval_from_name("U"),
+			  GDK_MOD1_MASK | GDK_SHIFT_MASK, /* key & mask */
+			  GTK_ACCEL_LOCKED,		  /* flags */
+			  g_cclosure_new(G_CALLBACK(accel_get_text),
+				  	 terminal, NULL) /* callback */
+  );
+
+
+
 
   gtk_window_add_accel_group(GTK_WINDOW(window), accelg);
 

@@ -1,7 +1,9 @@
-CFLAGS := -Wall -O3 -ggdb $(shell pkg-config --cflags vte-2.91) $(shell pkg-config --cflags gtk+-3.0)
+PIPECMD :=
+CFLAGS := -DPIPECMD="$(PIPECMD)" -Wall -O3 -ggdb $(shell pkg-config --cflags vte-2.91) $(shell pkg-config --cflags gtk+-3.0) $(shell pkg-config --cflags libseccomp)
 #$(shell pkg-config --cflags glib-2.0)
-LDFLAGS := $(shell pkg-config --libs vte-2.91) $(shell pkg-config --libs gtk+-3.0)
+LDFLAGS := $(shell pkg-config --libs vte-2.91) $(shell pkg-config --libs gtk+-3.0) $(shell pkg-config --libs libseccomp)
 #$(shell pkg-config --libs glib-2.0)
+
 
 all: main.c
 	cc $(CFLAGS) $(LDFLAGS) $< -o ate
