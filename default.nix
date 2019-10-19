@@ -34,7 +34,7 @@ stdenv.mkDerivation {
       keyValue = builtins.head keyList;
     in {
       "${key}_KEYVAL" = mkEscapedValue "" keyValue;
-      "${key}_MODIFIER_MASK" = lib.concatStringsSep " | " (map (m: "GDK_${lib.toUpper m}_MASK") modifiers);
+      "${key}_MODIFIER_MASK" = ''"${lib.concatStringsSep " | " (map (m: "GDK_${lib.toUpper m}_MASK") modifiers)}"'';
     }) keybindings;
     keybindingDefines = lib.foldr (accu: val: accu // val) {} listOfKeybindings;
     mkCFlag = key: value: "-D${key}=${value}";
