@@ -1,8 +1,8 @@
-{ stdenv, pkgs, pkgconfig, gnome3, gnumake, lib, makeWrapper, xurls, rofi, config ? {} }:
+{ stdenv, pkgs, pkgconfig, gnome3, gnumake, lib, makeWrapper, xurls, rofi, config }:
 #
 # Pass config like
 #
-# config = { BLACK = "#000000"; }
+# config.ate = { BACKGROUND_COLOR = "#000000"; }
 #
 # For possible options see config.default.h
 #
@@ -22,7 +22,7 @@ stdenv.mkDerivation {
     defaultConfig = { PIPECMD = toString pipecmd; };
     mkEscapedValue = value: lib.escapeShellArg ''"${value}"'';
     mkCFlag = key: value: "-D${key}=${mkEscapedValue value}";
-    configFlags = lib.mapAttrsToList mkCFlag (defaultConfig // config);
+    configFlags = lib.mapAttrsToList mkCFlag (defaultConfig // (config.ate or {}));
   in lib.concatStringsSep " " configFlags;
 
   installPhase = ''

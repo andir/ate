@@ -54,3 +54,5 @@
 #ifndef FOREGROUND_COLOR
 #define FOREGROUND_COLOR "#fce8c3"
 #endif
+
+// Options without default values: PIPECMD
