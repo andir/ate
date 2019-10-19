@@ -57,7 +57,8 @@
 
 // Options without default values: PIPECMD
 
-// The values hereafter should be set via config.ate.keybindings (see default.nix)
+// The values hereafter should be set via config.ate.keybindings (see
+// default.nix)
 
 #ifndef INCREMENT_FONT_KEYVAL
 #define INCREMENT_FONT_KEYVAL "plus"

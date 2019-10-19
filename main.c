@@ -1,21 +1,19 @@
 #include <gtk/gtk.h>
-#include <vte/vte.h>
-#include <linux/seccomp.h>
-#include <linux/filter.h>
 #include <linux/audit.h>
+#include <linux/filter.h>
+#include <linux/seccomp.h>
+#include <vte/vte.h>
 //#include <linux/signal.h>
-#include <sys/ptrace.h>
 #include <sys/prctl.h>
+#include <sys/ptrace.h>
 
 #include "config.default.h"
 
-static const gchar *colors[] =
-{
-   BLACK, RED, GREEN, YELLOW,
-   BLUE, MAGENTA, CYAN, WHITE,
-   BRIGHT_BLACK, BRIGHT_RED, BRIGHT_GREEN, BRIGHT_YELLOW,
-   BRIGHT_BLUE, BRIGHT_MAGENTA, BRIGHT_CYAN, BRIGHT_WHITE
-};
+static const gchar *colors[] = {
+    BLACK,        RED,           GREEN,       YELLOW,         BLUE,
+    MAGENTA,      CYAN,          WHITE,       BRIGHT_BLACK,   BRIGHT_RED,
+    BRIGHT_GREEN, BRIGHT_YELLOW, BRIGHT_BLUE, BRIGHT_MAGENTA, BRIGHT_CYAN,
+    BRIGHT_WHITE};
 
 const char *background_color = BACKGROUND_COLOR;
 const char *foreground_color = FOREGROUND_COLOR;
@@ -59,23 +57,20 @@ void spawn_cb(VteTerminal *terminal, GPid pid, GError *error,
 }
 
 // retrieve the entire text displayed in the current window
-void accel_get_text(GtkAccelGroup *accel_group,
-                              GObject *acceleratable, guint keyval,
-                              GdkModifierType modifier) {
-  VteTerminal *terminal = g_object_get_data(G_OBJECT(acceleratable), "terminal");
+void accel_get_text(GtkAccelGroup *accel_group, GObject *acceleratable,
+                    guint keyval, GdkModifierType modifier) {
+  VteTerminal *terminal =
+      g_object_get_data(G_OBJECT(acceleratable), "terminal");
 
-  char *text = vte_terminal_get_text(terminal,
-		NULL,
-		NULL,
-		NULL);
+  char *text = vte_terminal_get_text(terminal, NULL, NULL, NULL);
 
   printf("text: %s\n", text);
 
   FILE *fd = popen(PIPECMD, "w");
 
   if (fd == NULL) {
-  	free(text);
-	return;
+    free(text);
+    return;
   }
 
   fwrite(text, 1, strlen(text), fd);
@@ -109,7 +104,6 @@ void window_title_changed(VteTerminal *terminal, gpointer user_data) {
 
 // Increase the font size on request
 void increase_font_size(VteTerminal *terminal) {
-
   fprintf(stderr, "increase font size\n");
 
   fprintf(stderr, "terminal is %s\n", G_OBJECT_TYPE_NAME(terminal));
@@ -131,7 +125,6 @@ void increase_font_size(VteTerminal *terminal) {
 
 // Decrease the font size on request
 void decrease_font_size(VteTerminal *terminal) {
-
   fprintf(stderr, "decrease font size\n");
 
   g_assert(terminal != NULL);
@@ -174,10 +167,8 @@ void accel_decrease_font_size(GtkAccelGroup *accel_group,
   decrease_font_size(terminal);
 }
 
-
-void accel_paste(GtkAccelGroup *accel_group,
-		GObject* acceleratable, guint keyval,
-		GdkModifierType modifier) {
+void accel_paste(GtkAccelGroup *accel_group, GObject *acceleratable,
+                 guint keyval, GdkModifierType modifier) {
   VteTerminal *terminal =
       g_object_get_data(G_OBJECT(acceleratable), "terminal");
   fprintf(stderr, "paste\n");
@@ -190,8 +181,6 @@ int main(int argc, char *argv[]) {
   GdkRGBA *colors = NULL;
   GdkRGBA color;
   const size_t colors_count = get_color_pallete(&colors);
-
-
 
   if (colors_count <= 0 || colors == NULL) {
     return 1;
@@ -229,7 +218,8 @@ int main(int argc, char *argv[]) {
 
   /* Disable cursor blinking */
   if (!cursor_blink) {
-    vte_terminal_set_cursor_blink_mode(VTE_TERMINAL(terminal), VTE_CURSOR_BLINK_OFF);
+    vte_terminal_set_cursor_blink_mode(VTE_TERMINAL(terminal),
+                                       VTE_CURSOR_BLINK_OFF);
   }
 
   /* Connect some signals */
@@ -252,7 +242,7 @@ int main(int argc, char *argv[]) {
   gtk_accel_group_connect(accelg, /* group */
                           gdk_keyval_from_name(INCREMENT_FONT_KEYVAL),
                           INCREMENT_FONT_MODIFIER_MASK, /* key & mask */
-                          GTK_ACCEL_LOCKED,                  /* flags */
+                          GTK_ACCEL_LOCKED,             /* flags */
                           g_cclosure_new(G_CALLBACK(accel_increase_font_size),
                                          terminal, NULL) /* callback */
   );
@@ -261,31 +251,27 @@ int main(int argc, char *argv[]) {
   gtk_accel_group_connect(accelg, /* group */
                           gdk_keyval_from_name(DECREMENT_FONT_KEYVAL),
                           DECREMENT_FONT_MODIFIER_MASK, /* key & mask */
-                          GTK_ACCEL_LOCKED,                  /* flags */
+                          GTK_ACCEL_LOCKED,             /* flags */
                           g_cclosure_new(G_CALLBACK(accel_decrease_font_size),
                                          terminal, NULL) /* callback */
   );
 
   /* paste */
-  gtk_accel_group_connect(accelg, /* group */
-           gdk_keyval_from_name(PASTE_KEYVAL),
-           PASTE_MODIFIER_MASK, /* key & mask */
-           GTK_ACCEL_LOCKED,		  /* flags */
-           g_cclosure_new(G_CALLBACK(accel_paste),
-              terminal, NULL) /* callback */
+  gtk_accel_group_connect(
+      accelg,                                                  /* group */
+      gdk_keyval_from_name(PASTE_KEYVAL), PASTE_MODIFIER_MASK, /* key & mask */
+      GTK_ACCEL_LOCKED,                                        /* flags */
+      g_cclosure_new(G_CALLBACK(accel_paste), terminal, NULL)  /* callback */
   );
 
   /* pipecmd */
-  gtk_accel_group_connect(accelg, /* group */
-           gdk_keyval_from_name(PIPECMD_KEYVAL),
-           PIPECMD_MODIFIER_MASK, /* key & mask */
-           GTK_ACCEL_LOCKED,		  /* flags */
-           g_cclosure_new(G_CALLBACK(accel_get_text),
-                terminal, NULL) /* callback */
+  gtk_accel_group_connect(
+      accelg, /* group */
+      gdk_keyval_from_name(PIPECMD_KEYVAL),
+      PIPECMD_MODIFIER_MASK, /* key & mask */
+      GTK_ACCEL_LOCKED,      /* flags */
+      g_cclosure_new(G_CALLBACK(accel_get_text), terminal, NULL) /* callback */
   );
-
-
-
 
   gtk_window_add_accel_group(GTK_WINDOW(window), accelg);
 
