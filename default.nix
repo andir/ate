@@ -2,7 +2,7 @@
 #
 # Pass config like
 #
-# config.ate = { BACKGROUND_COLOR = "#000000"; }
+# nixpkgs.config.ate = { BACKGROUND_COLOR = "#000000"; }
 #
 # For possible options see config.default.h
 #
