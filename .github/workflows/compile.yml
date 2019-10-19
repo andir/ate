@@ -1,0 +1,21 @@
+name: "Test"
+on:
+  pull_request:
+  push:
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      NIX_PATH: "nixpkgs=https://github.com/NixOS/nixpkgs-channels/archive/nixos-19.09.tar.gz"
+    steps:
+    - uses: actions/checkout@v1
+    - uses: cachix/install-nix-action@v3
+    - run: nix-build test.nix
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - uses: DoozyX/clang-format-lint-action@v0.3.1
+      with:
+        source: '.'
+        extensions: 'h,c'
