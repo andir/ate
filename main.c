@@ -248,47 +248,40 @@ int main(int argc, char *argv[]) {
   /* hook the custom accelerators into the application */
   GtkAccelGroup *accelg = gtk_accel_group_new();
 
-  /* ctrl+shift+(plus) | increment font size */
+  /* increment font size */
   gtk_accel_group_connect(accelg, /* group */
-                          gdk_keyval_from_name("plus"),
-                          GDK_CONTROL_MASK | GDK_SHIFT_MASK, /* key & mask */
+                          gdk_keyval_from_name(INCREMENT_FONT_KEYVAL),
+                          INCREMENT_FONT_MODIFIER_MASK, /* key & mask */
                           GTK_ACCEL_LOCKED,                  /* flags */
                           g_cclosure_new(G_CALLBACK(accel_increase_font_size),
                                          terminal, NULL) /* callback */
   );
 
-  /* ctrl+shift+(minus) | decrement font size */
+  /* decrement font size */
   gtk_accel_group_connect(accelg, /* group */
-                          gdk_keyval_from_name("minus"),
-                          GDK_CONTROL_MASK | GDK_SHIFT_MASK, /* key & mask */
-                          GTK_ACCEL_LOCKED,                  /* flags */
-                          g_cclosure_new(G_CALLBACK(accel_decrease_font_size),
-                                         terminal, NULL) /* callback */
-  );
-  gtk_accel_group_connect(accelg, /* group */
-                          gdk_keyval_from_name("underscore"),
-                          GDK_CONTROL_MASK | GDK_SHIFT_MASK, /* key & mask */
+                          gdk_keyval_from_name(DECREMENT_FONT_KEYVAL),
+                          DECREMENT_FONT_MODIFIER_MASK, /* key & mask */
                           GTK_ACCEL_LOCKED,                  /* flags */
                           g_cclosure_new(G_CALLBACK(accel_decrease_font_size),
                                          terminal, NULL) /* callback */
   );
 
-  /* alt+shift+y | paste */
+  /* paste */
   gtk_accel_group_connect(accelg, /* group */
-		  	  gdk_keyval_from_name("y"),
-			  GDK_MOD1_MASK | GDK_SHIFT_MASK, /* key & mask */
-			  GTK_ACCEL_LOCKED,		  /* flags */
-			  g_cclosure_new(G_CALLBACK(accel_paste),
-				  	 terminal, NULL) /* callback */
+           gdk_keyval_from_name(PASTE_KEYVAL),
+           PASTE_MODIFIER_MASK, /* key & mask */
+           GTK_ACCEL_LOCKED,		  /* flags */
+           g_cclosure_new(G_CALLBACK(accel_paste),
+              terminal, NULL) /* callback */
   );
 
-  /* alt+shift+U | pipecmd */
+  /* pipecmd */
   gtk_accel_group_connect(accelg, /* group */
-		  	  gdk_keyval_from_name("U"),
-			  GDK_MOD1_MASK | GDK_SHIFT_MASK, /* key & mask */
-			  GTK_ACCEL_LOCKED,		  /* flags */
-			  g_cclosure_new(G_CALLBACK(accel_get_text),
-				  	 terminal, NULL) /* callback */
+           gdk_keyval_from_name(PIPECMD_KEYVAL),
+           PIPECMD_MODIFIER_MASK, /* key & mask */
+           GTK_ACCEL_LOCKED,		  /* flags */
+           g_cclosure_new(G_CALLBACK(accel_get_text),
+                terminal, NULL) /* callback */
   );
 
 
