@@ -7,43 +7,19 @@
 #include <sys/ptrace.h>
 #include <sys/prctl.h>
 
+#include "config.default.h"
 
-// static const gchar *colors[] = {"#282a2e", "#a54242", "#8c9440", "#de935f",
-//                                 "#5f819d", "#85678f", "#5e8d87", "#707880",
-//                                 "#373b41", "#cc6666", "#b5bd68", "#f0c674",
-//                                 "#81a2be", "#b294bb", "#8abeb7", "#c5c8c6"};
-static const gchar *colors[] = {
- /* 8 normal colors */
-  [0] = "#1c1b19", /* black   */
-  [1] = "#ef2f27", /* red     */
-  [2] = "#519f50", /* green   */
-  [3] = "#fbb829", /* yellow  */
-  [4] = "#2c78bf", /* blue    */
-  [5] = "#e02c6d", /* magenta */
-  [6] = "#0aaeb3", /* cyan    */
-  [7] = "#918175", /* white   */
-
-  /* 8 bright colors */
-  [8]  = "#2D2C29", /* black   */
-  [9]  = "#f75341", /* red     */
-  [10] = "#98bc37", /* green   */
-  [11] = "#fed06e", /* yellow  */
-  [12] = "#68A8E4", /* blue    */
-  [13] = "#ff5c8f", /* magenta */
-  [14] = "#53fde9", /* cyan    */
-  [15] = "#fce8c3", /* white   */
+static const gchar *colors[] =
+{
+   BLACK, RED, GREEN, YELLOW,
+   BLUE, MAGENTA, CYAN, WHITE,
+   BRIGHT_BLACK, BRIGHT_RED, BRIGHT_GREEN, BRIGHT_YELLOW,
+   BRIGHT_BLUE, BRIGHT_MAGENTA, BRIGHT_CYAN, BRIGHT_WHITE
 };
-//   /* special colors */
-//   [256] = "#1c1b19", /* background */
-// [257] = "#fce8c3", /* foreground */
 
-const char *background_color = "#1c1b19";
-const char *foreground_color = "#fce8c3";
+const char *background_color = BACKGROUND_COLOR;
+const char *foreground_color = FOREGROUND_COLOR;
 
-// const char *background_color = "#1d1f21";
-// const char *foreground_color = "#c5c8c6";
-
-// static const keybinding* keybindings[] = {};
 const gboolean enable_hyperlinks = TRUE;
 const gboolean hide_mouse_cursor = TRUE;
 const gboolean cursor_blink = FALSE;

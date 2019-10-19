@@ -1,4 +1,11 @@
-{ stdenv, pkgs, pkgconfig, gnome3, gnumake, makeWrapper, xurls, rofi}:
+{ stdenv, pkgs, pkgconfig, gnome3, gnumake, lib, makeWrapper, xurls, rofi, config }:
+#
+# Pass config like
+#
+# nixpkgs.config.ate = { BACKGROUND_COLOR = "#000000"; }
+#
+# For possible options see config.default.h
+#
 stdenv.mkDerivation {
   name = "ate-0.0.0";
 
@@ -7,12 +14,16 @@ stdenv.mkDerivation {
 
   src = ./.;
 
-  makeFlags = [
-    "PIPECMD=\\\"${pkgs.writeScript "pipecmd.sh" ''
+  CONFIG_CFLAGS = let
+    pipecmd = pkgs.writeScript "pipecmd.sh" ''
       #! /bin/sh
       ${xurls}/bin/xurls | sort | uniq | ${rofi}/bin/rofi -dmenu | xargs -r firefox
-    ''}\\\""
-  ];
+    '';
+    defaultConfig = { PIPECMD = toString pipecmd; };
+    mkEscapedValue = value: lib.escapeShellArg ''"${value}"'';
+    mkCFlag = key: value: "-D${key}=${mkEscapedValue value}";
+    configFlags = lib.mapAttrsToList mkCFlag (defaultConfig // (config.ate or {}));
+  in lib.concatStringsSep " " configFlags;
 
   installPhase = ''
     mkdir -p $out/bin
