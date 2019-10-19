@@ -56,3 +56,33 @@
 #endif
 
 // Options without default values: PIPECMD
+
+// The values hereafter should be set via config.ate.keybindings (see default.nix)
+
+#ifndef INCREMENT_FONT_KEYVAL
+#define INCREMENT_FONT_KEYVAL "plus"
+#endif
+#ifndef INCREMENT_FONT_MODIFIER_MASK
+#define INCREMENT_FONT_MODIFIER_MASK GDK_CONTROL_MASK | GDK_SHIFT_MASK
+#endif
+
+#ifndef DECREMENT_FONT_KEYVAL
+#define DECREMENT_FONT_KEYVAL "underscore"
+#endif
+#ifndef DECREMENT_FONT_MODIFIER_MASK
+#define DECREMENT_FONT_MODIFIER_MASK GDK_CONTROL_MASK | GDK_SHIFT_MASK
+#endif
+
+#ifndef PASTE_KEYVAL
+#define PASTE_KEYVAL "y"
+#endif
+#ifndef PASTE_MODIFIER_MASK
+#define PASTE_MODIFIER_MASK GDK_MOD1_MASK | GDK_SHIFT_MASK
+#endif
+
+#ifndef PIPECMD_KEYVAL
+#define PIPECMD_KEYVAL "u"
+#endif
+#ifndef PIPECMD_MODIFIER_MASK
+#define PIPECMD_MODIFIER_MASK GDK_MOD1_MASK | GDK_SHIFT_MASK
+#endif
