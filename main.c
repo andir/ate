@@ -7,7 +7,7 @@
 #include <sys/ptrace.h>
 #include <sys/prctl.h>
 
-#include "config.h"
+#include "config.default.h"
 
 static const gchar *colors[] =
 {
