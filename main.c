@@ -167,12 +167,20 @@ void accel_decrease_font_size(GtkAccelGroup *accel_group,
   decrease_font_size(terminal);
 }
 
-void accel_paste(GtkAccelGroup *accel_group, GObject *acceleratable,
-                 guint keyval, GdkModifierType modifier) {
+void accel_paste_primary(GtkAccelGroup *accel_group, GObject *acceleratable,
+                         guint keyval, GdkModifierType modifier) {
   VteTerminal *terminal =
       g_object_get_data(G_OBJECT(acceleratable), "terminal");
-  fprintf(stderr, "paste\n");
+  fprintf(stderr, "paste primary\n");
   vte_terminal_paste_primary(terminal);
+}
+
+void accel_paste_clipboard(GtkAccelGroup *accel_group, GObject *acceleratable,
+                           guint keyval, GdkModifierType modifier) {
+  VteTerminal *terminal =
+      g_object_get_data(G_OBJECT(acceleratable), "terminal");
+  fprintf(stderr, "paste clipboard\n");
+  vte_terminal_paste_clipboard(terminal);
 }
 
 int main(int argc, char *argv[]) {
@@ -256,12 +264,22 @@ int main(int argc, char *argv[]) {
                                          terminal, NULL) /* callback */
   );
 
-  /* paste */
-  gtk_accel_group_connect(
-      accelg,                                                  /* group */
-      gdk_keyval_from_name(PASTE_KEYVAL), PASTE_MODIFIER_MASK, /* key & mask */
-      GTK_ACCEL_LOCKED,                                        /* flags */
-      g_cclosure_new(G_CALLBACK(accel_paste), terminal, NULL)  /* callback */
+  /* paste primary */
+  gtk_accel_group_connect(accelg, /* group */
+                          gdk_keyval_from_name(PASTE_PRIMARY_KEYVAL),
+                          PASTE_PRIMARY_MODIFIER_MASK, /* key & mask */
+                          GTK_ACCEL_LOCKED,            /* flags */
+                          g_cclosure_new(G_CALLBACK(accel_paste_primary),
+                                         terminal, NULL) /* callback */
+  );
+
+  /* paste clipboard */
+  gtk_accel_group_connect(accelg, /* group */
+                          gdk_keyval_from_name(PASTE_CLIPBOARD_KEYVAL),
+                          PASTE_CLIPBOARD_MODIFIER_MASK, /* key & mask */
+                          GTK_ACCEL_LOCKED,              /* flags */
+                          g_cclosure_new(G_CALLBACK(accel_paste_clipboard),
+                                         terminal, NULL) /* callback */
   );
 
   /* pipecmd */
