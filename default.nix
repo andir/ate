@@ -4,7 +4,7 @@
 #
 # nixpkgs.config.ate.options = { BACKGROUND_COLOR = "#000000"; }
 # nixpkgs.config.ate.keybindings = { INCREMENT_FONT = "control+plus"; }
-# 
+#
 # See https://developer.gnome.org/gdk3/stable/gdk3-Windows.html#GdkModifierType for possible modifiers.
 # The format is "(<modifier>\+)+<keyname>" and the <modifier> will be used in the form GDK_<modifier>_MASK.
 # The keyname will be passed to https://developer.gnome.org/gdk3/stable/gdk3-Keyboard-Handling.html#gdk-keyval-from-name
