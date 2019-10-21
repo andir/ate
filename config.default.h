@@ -55,7 +55,7 @@
 #define FOREGROUND_COLOR "#fce8c3"
 #endif
 
-// Options without default values: PIPECMD
+// Options without default values: PIPECMD, PASTE_CLIPBOARD
 
 // The values hereafter should be set via config.ate.keybindings (see
 // default.nix)
@@ -74,11 +74,18 @@
 #define DECREMENT_FONT_MODIFIER_MASK GDK_CONTROL_MASK | GDK_SHIFT_MASK
 #endif
 
-#ifndef PASTE_KEYVAL
-#define PASTE_KEYVAL "y"
+#ifndef PASTE_PRIMARY_KEYVAL
+#define PASTE_PRIMARY_KEYVAL "y"
 #endif
-#ifndef PASTE_MODIFIER_MASK
-#define PASTE_MODIFIER_MASK GDK_MOD1_MASK | GDK_SHIFT_MASK
+#ifndef PASTE_PRIMARY_MODIFIER_MASK
+#define PASTE_PRIMARY_MODIFIER_MASK GDK_MOD1_MASK | GDK_SHIFT_MASK
+#endif
+
+#ifndef PASTE_CLIPBOARD_KEYVAL
+#define PASTE_CLIPBOARD_KEYVAL "y"
+#endif
+#ifndef PASTE_CLIPBOARD_MODIFIER_MASK
+#define PASTE_CLIPBOARD_MODIFIER_MASK GDK_CONTROL_MASK | GDK_SHIFT_MASK
 #endif
 
 #ifndef PIPECMD_KEYVAL
