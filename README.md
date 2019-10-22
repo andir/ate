@@ -1,6 +1,6 @@
 # ate - awesome terminal emulator
 
-Is my personal terminal emulator tailor made for what I need and just what I need. 
+Is my personal terminal emulator tailor made for what I need and just what I need.
 
 Goals:
   - Work on X11
@@ -9,7 +9,7 @@ Goals:
   - Reflow
   - Emoji support
   - Font resizing with ctrl-shift-plus/ctrl-shift-minus
-  - Compile time configuration 
+  - Compile time configuration
 
 Non-Goals:
    - Parsing configuration files
@@ -24,36 +24,36 @@ You can change the configuration by setting `nixpkgs.config.ate` or passing an a
 
 Example:
 ```
-ate = pkgs.callPackage path/to/this/repo/default.nix {                       
-    config.ate = {                                                      
+ate = pkgs.callPackage path/to/this/repo/default.nix {
+    config.ate = {
       options = {
-        BLACK = "#000000";                                    
+        BLACK = "#000000";
         RED = ...;
         GREEN = ...;
-        YELLOW = ...;                                
-        BLUE = ...;                          
-        MAGENTA = ...;                          
-        CYAN = ...;         
-        WHITE = ...;                
+        YELLOW = ...;
+        BLUE = ...;
+        MAGENTA = ...;
+        CYAN = ...;
+        WHITE = ...;
         BRIGHT_BLACK = ...;
-        BRIGHT_RED = ...;                              
+        BRIGHT_RED = ...;
         BRIGHT_GREEN = ...;
         BRIGHT_YELLOW = ...;
         BRIGHT_BLUE = ...;
         BRIGHT_MAGENTA = ...;
-        BRIGHT_CYAN = ...;         
-        BRIGHT_WHITE = ...;             
-        FOREGROUND_COLOR = ...;                         
+        BRIGHT_CYAN = ...;
+        BRIGHT_WHITE = ...;
+        FOREGROUND_COLOR = ...;
         BACKGROUND_COLOR = ...;
         PIPECMD = path/to/a/command/which/processes/terminal/content/on/stdin;
       };
-      keybindings = {           
-        DECREMENT_FONT =                                              
+      keybindings = {
+        DECREMENT_FONT =
           "control+shift+underscore"; # Works like Control+Shift+Minus on qwerty and qwertz
         INCREMENT_FONT = "control+shift+plus;
         PASTE = "control+mod1+y"; # Mod1 == Alt
         PIPECMD = "control+mod1+u";
-      };                        
-    };                 
-  };                  
+      };
+    };
+  };
 
