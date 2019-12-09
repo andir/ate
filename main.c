@@ -64,18 +64,20 @@ void accel_get_text(GtkAccelGroup *accel_group, GObject *acceleratable,
 
   char *text = vte_terminal_get_text(terminal, NULL, NULL, NULL);
 
-  printf("text: %s\n", text);
+  if (fork() == 0) {
+    FILE *fd = popen(PIPECMD, "w");
+    if (fd == NULL) {
+      free(text);
+      exit(1);
+      return;
+    }
 
-  FILE *fd = popen(PIPECMD, "w");
-
-  if (fd == NULL) {
+    fwrite(text, 1, strlen(text), fd);
+    fflush(fd);
+    fclose(fd);
     free(text);
-    return;
+    exit(0);
   }
-
-  fwrite(text, 1, strlen(text), fd);
-  fflush(fd);
-  fclose(fd);
 
   free(text);
 }
