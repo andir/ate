@@ -1,6 +1,7 @@
 #include <gtk/gtk.h>
 #include <linux/audit.h>
 #include <linux/filter.h>
+#include <stdio.h>
 #include <vte/vte.h>
 //#include <linux/signal.h>
 #include <sys/prctl.h>
@@ -21,6 +22,7 @@ const gboolean enable_hyperlinks = TRUE;
 const gboolean hide_mouse_cursor = TRUE;
 const gboolean cursor_blink = FALSE;
 const gint scrollback_size = 50000;
+static gint initial_font_size = 0;
 
 size_t get_color_pallete(GdkRGBA **gcolors_p) {
   const size_t colors_count = sizeof(colors) / sizeof(colors[0]);
@@ -99,6 +101,19 @@ void window_title_changed(VteTerminal *terminal, gpointer user_data) {
   g_assert(title != NULL);
 
   gtk_window_set_title(GTK_WINDOW(window), title);
+}
+
+gint get_current_font_size(VteTerminal *terminal) {
+  g_assert(terminal != NULL);
+
+  PangoFontDescription *desc =
+      pango_font_description_copy(vte_terminal_get_font(terminal));
+  g_assert(desc != NULL);
+
+  gint size = pango_font_description_get_size(desc);
+  pango_font_description_free(desc);
+
+  return size / PANGO_SCALE;
 }
 
 // Increase the font size on request
@@ -291,6 +306,10 @@ int main(int argc, char *argv[]) {
   );
 
   gtk_window_add_accel_group(GTK_WINDOW(window), accelg);
+
+  // record the initial font size so we can reset the font to that value
+  initial_font_size = get_current_font_size(VTE_TERMINAL(terminal));
+  fprintf(stderr, "initial font size: %i\n", initial_font_size);
 
   // attach the terminal as private data to the window
   g_object_set_data(G_OBJECT(window), "terminal", terminal);
