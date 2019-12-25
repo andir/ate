@@ -1,7 +1,6 @@
 #include <gtk/gtk.h>
 #include <linux/audit.h>
 #include <linux/filter.h>
-#include <linux/seccomp.h>
 #include <vte/vte.h>
 //#include <linux/signal.h>
 #include <sys/prctl.h>
