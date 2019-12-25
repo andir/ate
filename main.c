@@ -116,6 +116,23 @@ gint get_current_font_size(VteTerminal *terminal) {
   return size / PANGO_SCALE;
 }
 
+// Reset the font size to the initial value we recorded during startup
+void reset_font_size(VteTerminal *terminal) {
+  fprintf(stderr, "reset font size\n");
+
+  g_assert(terminal != NULL);
+
+  PangoFontDescription *desc =
+      pango_font_description_copy(vte_terminal_get_font(terminal));
+  g_assert(desc != NULL);
+
+  fprintf(stderr, "font size: %i\n", initial_font_size);
+
+  pango_font_description_set_size(desc, initial_font_size * PANGO_SCALE);
+  vte_terminal_set_font(terminal, desc);
+  pango_font_description_free(desc);
+}
+
 // Increase the font size on request
 void increase_font_size(VteTerminal *terminal) {
   fprintf(stderr, "increase font size\n");
@@ -163,6 +180,13 @@ void signal_increase_font_size(VteTerminal *terminal, gpointer user_data) {
 
 void signal_decrease_font_size(VteTerminal *terminal, gpointer user_data) {
   decrease_font_size(terminal);
+}
+
+void accel_reset_font_size(GtkAccelGroup *accel_group, GObject *acceleratable,
+                           guint keyval, GdkModifierType modifier) {
+  VteTerminal *terminal =
+      g_object_get_data(G_OBJECT(acceleratable), "terminal");
+  reset_font_size(terminal);
 }
 
 void accel_increase_font_size(GtkAccelGroup *accel_group,
@@ -259,6 +283,15 @@ int main(int argc, char *argv[]) {
 
   /* hook the custom accelerators into the application */
   GtkAccelGroup *accelg = gtk_accel_group_new();
+
+  /* reset font size */
+  gtk_accel_group_connect(accelg, /* group */
+                          gdk_keyval_from_name(RESET_FONT_KEYVAL),
+                          RESET_FONT_MODIFIER_MASK, /* key & mask */
+                          GTK_ACCEL_LOCKED,         /* flags */
+                          g_cclosure_new(G_CALLBACK(accel_reset_font_size),
+                                         terminal, NULL) /* callback */
+  );
 
   /* increment font size */
   gtk_accel_group_connect(accelg, /* group */

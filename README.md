@@ -48,6 +48,7 @@ ate = pkgs.callPackage path/to/this/repo/default.nix {
         PIPECMD = path/to/a/command/which/processes/terminal/content/on/stdin;
       };
       keybindings = {
+        RESET_FONT = "control+0";
         DECREMENT_FONT =
           "control+shift+underscore"; # Works like Control+Shift+Minus on qwerty and qwertz
         INCREMENT_FONT = "control+shift+plus;

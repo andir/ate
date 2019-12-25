@@ -60,6 +60,13 @@
 // The values hereafter should be set via config.ate.keybindings (see
 // default.nix)
 
+#ifndef RESET_FONT_KEYVAL
+#define RESET_FONT_KEYVAL "0"
+#endif
+#ifndef RESET_FONT_MODIFIER_MASK
+#define RESET_FONT_MODIFIER_MASK GDK_CONTROL_MASK
+#endif
+
 #ifndef INCREMENT_FONT_KEYVAL
 #define INCREMENT_FONT_KEYVAL "plus"
 #endif
