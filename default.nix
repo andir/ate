@@ -33,7 +33,7 @@ in
 # For possible options see config.default.h
 #
 stdenv.mkDerivation {
-  name = "ate-0.0.0";
+  name = "ate-1.0.0";
 
   buildInputs = [ gnome3.vte or pkgs.vte ];
   nativeBuildInputs = [ pkgconfig gnumake makeWrapper ];
