@@ -15,7 +15,8 @@ let
         else lib.escapeShellArg ''"${value}"'';
     in v;
 
-  listOfKeybindings = lib.mapAttrsToList (key: value: let
+  listOfKeybindings = lib.mapAttrsToList (key: value:
+    let
       keyList = lib.reverseList (lib.splitString "+" value);
       modifiers = builtins.tail keyList;
       keyValue = builtins.head keyList;
