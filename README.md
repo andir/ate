@@ -8,7 +8,7 @@ Goals:
   - Scrollback
   - Reflow
   - Emoji support
-  - Font resizing with ctrl-shift-plus/ctrl-shift-minus
+  - Font resizing with ctrl-shift-plus/ctrl-shift-minus; ctrl-0 to reset the font size
   - Compile time configuration
 
 Non-Goals:
@@ -51,7 +51,7 @@ ate = pkgs.callPackage path/to/this/repo/default.nix {
         RESET_FONT = "control+0";
         DECREMENT_FONT =
           "control+shift+underscore"; # Works like Control+Shift+Minus on qwerty and qwertz
-        INCREMENT_FONT = "control+shift+plus;
+        INCREMENT_FONT = "control+shift+plus";
         PASTE = "control+mod1+y"; # Mod1 == Alt
         PIPECMD = "control+mod1+u";
       };
