@@ -12,7 +12,7 @@
 let
   pipecmd = pkgs.writeScript "pipecmd.sh" ''
     #! ${stdenv.shell}
-    ${xurls}/bin/xurls | sort | uniq | ${rofi}/bin/rofi -dmenu | xargs -r firefox
+    ${xurls}/bin/xurls | ${rofi}/bin/rofi -dmenu | xargs -r firefox
   '';
 
   ateConfig = lib.recursiveUpdate {
