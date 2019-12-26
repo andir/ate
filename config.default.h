@@ -59,7 +59,6 @@
 #define BACKGROUND_OPACITY 0.8
 #endif
 
-
 // The values hereafter should be set via config.ate.keybindings (see
 // default.nix)
 
