@@ -1,4 +1,14 @@
-{ stdenv, pkgs, pkgconfig, gnome3, gnumake, lib, makeWrapper, xurls, rofi, config }:
+{ stdenv
+, config
+, gnome3
+, gnumake
+, lib
+, makeWrapper
+, pkgconfig
+, pkgs
+, rofi
+, xurls
+}:
 #
 # Pass config like
 #
@@ -14,8 +24,8 @@
 stdenv.mkDerivation {
   name = "ate-0.0.0";
 
-  buildInputs = [ gnome3.vte or pkgs.vte makeWrapper ];
-  nativeBuildInputs = [ pkgconfig gnumake pkgs.gdb pkgs.clang-tools ];
+  buildInputs = [ gnome3.vte or pkgs.vte ];
+  nativeBuildInputs = [ pkgconfig gnumake makeWrapper ];
 
   # filter the .nix files from the repo
   src = lib.cleanSourceWith {
