@@ -17,7 +17,14 @@ stdenv.mkDerivation {
   buildInputs = [ gnome3.vte or pkgs.vte makeWrapper ];
   nativeBuildInputs = [ pkgconfig gnumake pkgs.gdb pkgs.clang-tools ];
 
-  src = ./.;
+  # filter the .nix files from the repo
+  src = lib.cleanSourceWith {
+    filter = name: _type:
+      let
+        baseName = baseNameOf (toString name);
+      in ! (lib.hasSuffix ".nix" baseName);
+    src = lib.cleanSource ./.;
+  };
 
   CONFIG_CFLAGS = let
     pipecmd = pkgs.writeScript "pipecmd.sh" ''
