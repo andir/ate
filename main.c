@@ -245,7 +245,7 @@ int main(int argc, char *argv[]) {
   window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
   gtk_window_set_title(GTK_WINDOW(window), "at");
 
-  gtk_widget_set_opacity(GTK_WIDGET(window), 0.8);
+  gtk_widget_set_opacity(GTK_WIDGET(window), BACKGROUND_OPACITY);
 
   gdk_rgba_parse(&color, foreground_color);
   vte_terminal_set_color_foreground(VTE_TERMINAL(terminal), &color);

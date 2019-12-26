@@ -31,8 +31,18 @@ stdenv.mkDerivation {
       #! /bin/sh
       ${xurls}/bin/xurls | sort | uniq | ${rofi}/bin/rofi -dmenu | xargs -r firefox
     '';
-    defaultConfig = { PIPECMD = toString pipecmd; };
-    mkEscapedValue = name: value: lib.escapeShellArg ''"${value}"'';
+    defaultConfig = { PIPECMD = toString pipecmd; BACKGROUND_OPACITY = 0.8; };
+    mkEscapedValue = name: value:
+      let
+        # escape the value for the macro defintion
+        # int's and floats aren't quoted but converted to string instead
+        type = builtins.typeOf value;
+        v =
+          if lib.elem type [ "float" "int" ] then
+            toString value
+          else lib.escapeShellArg ''"${value}"'';
+      in v;
+
     stringDefines = lib.mapAttrs mkEscapedValue (defaultConfig // (config.ate.options or {}));
     keybindings = (config.ate.keybindings or {});
     listOfKeybindings = lib.mapAttrsToList (key: value: let

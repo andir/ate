@@ -55,6 +55,11 @@
 #define FOREGROUND_COLOR "#fce8c3"
 #endif
 
+#ifndef BACKGROUND_OPACITY
+#define BACKGROUND_OPACITY 0.8
+#endif
+
+
 // The values hereafter should be set via config.ate.keybindings (see
 // default.nix)
 
