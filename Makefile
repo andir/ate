@@ -9,4 +9,4 @@ all: main.c
 
 .PHONY: format
 format:
-	clang-format -i main.c
+	clang-format -i main.c config.default.h

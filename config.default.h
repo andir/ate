@@ -55,8 +55,6 @@
 #define FOREGROUND_COLOR "#fce8c3"
 #endif
 
-// Options without default values: PIPECMD, PASTE_CLIPBOARD
-
 // The values hereafter should be set via config.ate.keybindings (see
 // default.nix)
 

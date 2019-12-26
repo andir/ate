@@ -2,10 +2,9 @@
 #include <linux/audit.h>
 #include <linux/filter.h>
 #include <stdio.h>
-#include <vte/vte.h>
-//#include <linux/signal.h>
 #include <sys/prctl.h>
 #include <sys/ptrace.h>
+#include <vte/vte.h>
 
 #include "config.default.h"
 
@@ -57,9 +56,10 @@ void spawn_cb(VteTerminal *terminal, GPid pid, GError *error,
   }
 }
 
+#ifdef PIPECMD
 // retrieve the entire text displayed in the current window
-void accel_get_text(GtkAccelGroup *accel_group, GObject *acceleratable,
-                    guint keyval, GdkModifierType modifier) {
+void accel_pipecmd(GtkAccelGroup *accel_group, GObject *acceleratable,
+                   guint keyval, GdkModifierType modifier) {
   VteTerminal *terminal =
       g_object_get_data(G_OBJECT(acceleratable), "terminal");
 
@@ -82,6 +82,7 @@ void accel_get_text(GtkAccelGroup *accel_group, GObject *acceleratable,
 
   free(text);
 }
+#endif
 
 // whenever the terminal bell is triggered propagate the event to the window
 void bell(VteTerminal *terminal, gpointer user_data) {
@@ -332,13 +333,17 @@ int main(int argc, char *argv[]) {
   );
 
   /* pipecmd */
+#ifdef PIPECMD
   gtk_accel_group_connect(
       accelg, /* group */
       gdk_keyval_from_name(PIPECMD_KEYVAL),
-      PIPECMD_MODIFIER_MASK, /* key & mask */
-      GTK_ACCEL_LOCKED,      /* flags */
-      g_cclosure_new(G_CALLBACK(accel_get_text), terminal, NULL) /* callback */
+      PIPECMD_MODIFIER_MASK,                                    /* key & mask */
+      GTK_ACCEL_LOCKED,                                         /* flags */
+      g_cclosure_new(G_CALLBACK(accel_pipecmd), terminal, NULL) /* callback */
   );
+#else
+#warning "No PIPECMD configured. The pipecmd feature will not work."
+#endif
 
   gtk_window_add_accel_group(GTK_WINDOW(window), accelg);
 
