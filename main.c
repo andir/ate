@@ -1,9 +1,5 @@
 #include <gtk/gtk.h>
-#include <linux/audit.h>
-#include <linux/filter.h>
 #include <stdio.h>
-#include <sys/prctl.h>
-#include <sys/ptrace.h>
 #include <vte/vte.h>
 
 #include "config.default.h"
