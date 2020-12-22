@@ -181,43 +181,92 @@ void signal_decrease_font_size(VteTerminal *terminal, gpointer user_data) {
   decrease_font_size(terminal);
 }
 
-void accel_reset_font_size(GtkAccelGroup *accel_group, GObject *acceleratable,
-                           guint keyval, GdkModifierType modifier) {
+gboolean accel_reset_font_size(GtkAccelGroup *accel_group,
+                               GObject *acceleratable, guint keyval,
+                               GdkModifierType modifier) {
   VteTerminal *terminal =
       g_object_get_data(G_OBJECT(acceleratable), "terminal");
   reset_font_size(terminal);
+
+  return TRUE;
 }
 
-void accel_increase_font_size(GtkAccelGroup *accel_group,
-                              GObject *acceleratable, guint keyval,
-                              GdkModifierType modifier) {
+gboolean accel_increase_font_size(GtkAccelGroup *accel_group,
+                                  GObject *acceleratable, guint keyval,
+                                  GdkModifierType modifier) {
   VteTerminal *terminal =
       g_object_get_data(G_OBJECT(acceleratable), "terminal");
   increase_font_size(terminal);
+
+  return TRUE;
 }
 
-void accel_decrease_font_size(GtkAccelGroup *accel_group,
-                              GObject *acceleratable, guint keyval,
-                              GdkModifierType modifier) {
+gboolean accel_decrease_font_size(GtkAccelGroup *accel_group,
+                                  GObject *acceleratable, guint keyval,
+                                  GdkModifierType modifier) {
   VteTerminal *terminal =
       g_object_get_data(G_OBJECT(acceleratable), "terminal");
   decrease_font_size(terminal);
+
+  return TRUE;
 }
 
-void accel_paste_primary(GtkAccelGroup *accel_group, GObject *acceleratable,
-                         guint keyval, GdkModifierType modifier) {
+gboolean accel_paste_primary(GtkAccelGroup *accel_group, GObject *acceleratable,
+                             guint keyval, GdkModifierType modifier) {
   VteTerminal *terminal =
       g_object_get_data(G_OBJECT(acceleratable), "terminal");
   fprintf(stderr, "paste primary\n");
   vte_terminal_paste_primary(terminal);
+
+  return TRUE;
 }
 
-void accel_paste_clipboard(GtkAccelGroup *accel_group, GObject *acceleratable,
-                           guint keyval, GdkModifierType modifier) {
+gboolean accel_paste_clipboard(GtkAccelGroup *accel_group,
+                               GObject *acceleratable, guint keyval,
+                               GdkModifierType modifier) {
   VteTerminal *terminal =
       g_object_get_data(G_OBJECT(acceleratable), "terminal");
   fprintf(stderr, "paste clipboard\n");
   vte_terminal_paste_clipboard(terminal);
+
+  return TRUE;
+}
+
+gboolean accel_input_modal(GtkAccelGroup *accel_group, GObject *acceleratable,
+                           guint keyval, GdkModifierType modifier) {
+  VteTerminal *terminal =
+      g_object_get_data(G_OBJECT(acceleratable), "terminal");
+  GtkWindow *window = GTK_WINDOW(gtk_widget_get_parent(GTK_WIDGET(terminal)));
+
+  GtkWidget *dialog = gtk_dialog_new_with_buttons(
+      "Modal input", NULL, GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
+      "Ok", GTK_RESPONSE_ACCEPT, "Cancel", GTK_RESPONSE_REJECT, NULL);
+  gtk_dialog_set_default_response(GTK_DIALOG(dialog), GTK_RESPONSE_ACCEPT);
+
+  GtkWidget *content_area = gtk_dialog_get_content_area(GTK_DIALOG(dialog));
+  GtkWidget *entry = gtk_entry_new();
+  gtk_entry_set_text(GTK_ENTRY(entry), "");
+  gtk_entry_set_activates_default(GTK_ENTRY(entry), TRUE);
+  gtk_container_add(GTK_CONTAINER(content_area), entry);
+  gtk_widget_show(entry);
+  gtk_window_set_transient_for(GTK_WINDOW(dialog), GTK_WINDOW(window));
+  gtk_window_set_keep_above(GTK_WINDOW(window), TRUE);
+
+  int result = gtk_dialog_run(GTK_DIALOG(dialog));
+  switch (result) {
+  case GTK_RESPONSE_ACCEPT:
+    fprintf(stderr, "Accept input\n");
+    const char *text = gtk_entry_get_text(GTK_ENTRY(entry));
+    vte_terminal_feed_child(terminal, text, -1);
+    break;
+  default:
+    fprintf(stderr, "Not accepted\n");
+  }
+  gtk_window_set_keep_above(GTK_WINDOW(window), FALSE);
+
+  gtk_widget_destroy(dialog);
+
+  return TRUE;
 }
 
 int main(int argc, char *argv[]) {
@@ -340,6 +389,15 @@ int main(int argc, char *argv[]) {
 #else
 #warning "No PIPECMD configured. The pipecmd feature will not work."
 #endif
+
+  gtk_accel_group_connect(
+      accelg,                                   /* group */
+      gdk_keyval_from_name(MODAL_INPUT_KEYVAL), /* key & mask */
+      MODAL_INPUT_MODIFIER_MASK,                /* flags */
+      GTK_ACCEL_LOCKED,
+      g_cclosure_new(G_CALLBACK(accel_input_modal), terminal,
+                     NULL) /* callback */
+  );
 
   gtk_window_add_accel_group(GTK_WINDOW(window), accelg);
 

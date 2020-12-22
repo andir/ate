@@ -2,6 +2,7 @@
 , config
 , gnome3
 , gnumake
+, wrapGAppsHook
 , lib
 , makeWrapper
 , pkgconfig
@@ -36,7 +37,7 @@ stdenv.mkDerivation {
   name = "ate-1.0.0";
 
   buildInputs = [ gnome3.vte or pkgs.vte ];
-  nativeBuildInputs = [ pkgconfig gnumake makeWrapper ];
+  nativeBuildInputs = [ pkgconfig gnumake makeWrapper wrapGAppsHook ];
 
   # filter the .nix files from the repo
   src = lib.cleanSourceWith {
