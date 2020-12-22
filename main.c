@@ -181,43 +181,55 @@ void signal_decrease_font_size(VteTerminal *terminal, gpointer user_data) {
   decrease_font_size(terminal);
 }
 
-void accel_reset_font_size(GtkAccelGroup *accel_group, GObject *acceleratable,
-                           guint keyval, GdkModifierType modifier) {
+gboolean accel_reset_font_size(GtkAccelGroup *accel_group,
+                               GObject *acceleratable, guint keyval,
+                               GdkModifierType modifier) {
   VteTerminal *terminal =
       g_object_get_data(G_OBJECT(acceleratable), "terminal");
   reset_font_size(terminal);
+
+  return TRUE;
 }
 
-void accel_increase_font_size(GtkAccelGroup *accel_group,
-                              GObject *acceleratable, guint keyval,
-                              GdkModifierType modifier) {
+gboolean accel_increase_font_size(GtkAccelGroup *accel_group,
+                                  GObject *acceleratable, guint keyval,
+                                  GdkModifierType modifier) {
   VteTerminal *terminal =
       g_object_get_data(G_OBJECT(acceleratable), "terminal");
   increase_font_size(terminal);
+
+  return TRUE;
 }
 
-void accel_decrease_font_size(GtkAccelGroup *accel_group,
-                              GObject *acceleratable, guint keyval,
-                              GdkModifierType modifier) {
+gboolean accel_decrease_font_size(GtkAccelGroup *accel_group,
+                                  GObject *acceleratable, guint keyval,
+                                  GdkModifierType modifier) {
   VteTerminal *terminal =
       g_object_get_data(G_OBJECT(acceleratable), "terminal");
   decrease_font_size(terminal);
+
+  return TRUE;
 }
 
-void accel_paste_primary(GtkAccelGroup *accel_group, GObject *acceleratable,
-                         guint keyval, GdkModifierType modifier) {
+gboolean accel_paste_primary(GtkAccelGroup *accel_group, GObject *acceleratable,
+                             guint keyval, GdkModifierType modifier) {
   VteTerminal *terminal =
       g_object_get_data(G_OBJECT(acceleratable), "terminal");
   fprintf(stderr, "paste primary\n");
   vte_terminal_paste_primary(terminal);
+
+  return TRUE;
 }
 
-void accel_paste_clipboard(GtkAccelGroup *accel_group, GObject *acceleratable,
-                           guint keyval, GdkModifierType modifier) {
+gboolean accel_paste_clipboard(GtkAccelGroup *accel_group,
+                               GObject *acceleratable, guint keyval,
+                               GdkModifierType modifier) {
   VteTerminal *terminal =
       g_object_get_data(G_OBJECT(acceleratable), "terminal");
   fprintf(stderr, "paste clipboard\n");
   vte_terminal_paste_clipboard(terminal);
+
+  return TRUE;
 }
 
 gboolean accel_input_modal(GtkAccelGroup *accel_group, GObject *acceleratable,
