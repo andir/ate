@@ -31,7 +31,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2.3.4
-    - uses: DoozyX/clang-format-lint-action@v0.11
+    - uses: DoozyX/clang-format-lint-action@v0.12
       with:
         source: '.'
         extensions: 'h,c'
