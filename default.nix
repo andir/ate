@@ -36,7 +36,7 @@ in
 stdenv.mkDerivation {
   name = "ate-1.1.0";
 
-  buildInputs = [ gnome3.vte or pkgs.vte ];
+  buildInputs = [ pkgs.vte ];
   nativeBuildInputs = [ pkgconfig gnumake makeWrapper wrapGAppsHook ];
 
   # filter the .nix files from the repo
