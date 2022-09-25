@@ -5,7 +5,7 @@
 , wrapGAppsHook
 , lib
 , makeWrapper
-, pkgconfig
+, pkg-config
 , pkgs
 , rofi
 , xurls
@@ -37,7 +37,7 @@ stdenv.mkDerivation {
   name = "ate-1.1.0";
 
   buildInputs = [ pkgs.vte ];
-  nativeBuildInputs = [ pkgconfig gnumake makeWrapper wrapGAppsHook ];
+  nativeBuildInputs = [ pkg-config gnumake makeWrapper wrapGAppsHook ];
 
   # filter the .nix files from the repo
   src = lib.cleanSourceWith {
