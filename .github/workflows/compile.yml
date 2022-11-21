@@ -9,7 +9,7 @@ jobs:
       NIX_PATH: "nixpkgs=https://github.com/NixOS/nixpkgs/archive/nixos-21.05.tar.gz"
     steps:
     - uses: actions/checkout@v3.1.0
-    - uses: cachix/install-nix-action@v17
+    - uses: cachix/install-nix-action@v18
     - run: nix-build test.nix
   build-unstable:
     runs-on: ubuntu-latest
@@ -17,7 +17,7 @@ jobs:
       NIX_PATH: "nixpkgs=https://github.com/NixOS/nixpkgs/archive/nixos-unstable.tar.gz"
     steps:
     - uses: actions/checkout@v3.1.0
-    - uses: cachix/install-nix-action@v17
+    - uses: cachix/install-nix-action@v18
     - run: nix-build test.nix
   lint:
     runs-on: ubuntu-latest
