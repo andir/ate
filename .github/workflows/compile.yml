@@ -3,18 +3,10 @@ on:
   pull_request:
   push:
 jobs:
-  build-2003:
+  build-2105:
     runs-on: ubuntu-latest
     env:
-      NIX_PATH: "nixpkgs=https://github.com/NixOS/nixpkgs/archive/nixos-20.03.tar.gz"
-    steps:
-    - uses: actions/checkout@v3.1.0
-    - uses: cachix/install-nix-action@v17
-    - run: nix-build test.nix
-  build-2009:
-    runs-on: ubuntu-latest
-    env:
-      NIX_PATH: "nixpkgs=https://github.com/NixOS/nixpkgs/archive/nixos-20.09.tar.gz"
+      NIX_PATH: "nixpkgs=https://github.com/NixOS/nixpkgs/archive/nixos-21.05.tar.gz"
     steps:
     - uses: actions/checkout@v3.1.0
     - uses: cachix/install-nix-action@v17
