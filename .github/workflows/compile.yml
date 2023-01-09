@@ -8,7 +8,7 @@ jobs:
     env:
       NIX_PATH: "nixpkgs=https://github.com/NixOS/nixpkgs/archive/nixos-21.05.tar.gz"
     steps:
-    - uses: actions/checkout@v3.1.0
+    - uses: actions/checkout@v3.3.0
     - uses: cachix/install-nix-action@v18
     - run: nix-build test.nix
   build-unstable:
@@ -16,13 +16,13 @@ jobs:
     env:
       NIX_PATH: "nixpkgs=https://github.com/NixOS/nixpkgs/archive/nixos-unstable.tar.gz"
     steps:
-    - uses: actions/checkout@v3.1.0
+    - uses: actions/checkout@v3.3.0
     - uses: cachix/install-nix-action@v18
     - run: nix-build test.nix
   lint:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3.1.0
+    - uses: actions/checkout@v3.3.0
     - uses: DoozyX/clang-format-lint-action@v0.15
       with:
         source: '.'
